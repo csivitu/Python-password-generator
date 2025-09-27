@@ -11,17 +11,21 @@ WORDS = [
     "cosmos", "signal", "flare", "aurora", "nova", "spark", "horizon", "lunar"
 ]
 
-def generate_password(num_words=4, include_numbers=True, include_symbols=True):
+def generate_password(num_words=4, include_numbers=True, include_symbols=True, exclude_chars=""):
     chosen = random.sample(WORDS, num_words)
-    password = "-".join(chosen)
-
+    # Remove excluded chars from words
+    cleaned_words = ["".join(c for c in word if c not in exclude_chars) for word in chosen]
+    password = "-".join(cleaned_words)
     if include_numbers:
-        password += str(random.randint(10, 99))
-
+        valid_digits = [d for d in "0123456789" if d not in exclude_chars]
+        if valid_digits:
+            password += random.choice(valid_digits) + random.choice(valid_digits)
     if include_symbols:
-        password += random.choice("!@#$%^&*?")
-
+        valid_symbols = [s for s in "!@#$%^&*?" if s not in exclude_chars]
+        if valid_symbols:
+            password += random.choice(valid_symbols)
     return password
+
 
 # ---------- Strength calculation ----------
 def estimate_entropy(password: str) -> float:
@@ -49,6 +53,32 @@ def strength_label(entropy_bits: float):
         return "Strong", "lightgreen"
     else:
         return "Very Strong", "green"
+
+    #Labels for colours have alreay been given thus the issue is moot yet here is a lil something for y'all
+
+    # Add after strength_label_widget
+strength_canvas = tk.Canvas(root, height=16, width=240, highlightthickness=0)
+strength_canvas.pack(pady=5)
+
+def update_strength_meter(entropy):
+    # Define 4 buckets and their respective colors
+    buckets = [
+        (28, "red"),
+        (36, "orange"),
+        (60, "yellow"),
+        (128, "lightgreen"),
+        (float("inf"), "green")
+    ]
+    width = 60  # 240px total divided by 4
+    for i, (limit, color) in enumerate(buckets):
+        # Fill up to the bucket reached
+        fill = "black" if entropy < limit and i > 0 else color
+        strength_canvas.create_rectangle(i*width, 0, (i+1)*width, 16, fill=fill, outline="")
+    strength_canvas.update()
+
+# In on_generate, after updating label color, add:
+update_strength_meter(entropy)
+
 
 # ---------- Callbacks ----------
 def on_generate():
