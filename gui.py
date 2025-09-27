@@ -54,6 +54,32 @@ def strength_label(entropy_bits: float):
     else:
         return "Very Strong", "green"
 
+    #Labels for colours have alreay been given thus the issue is moot yet here is a lil something for y'all
+
+    # Add after strength_label_widget
+strength_canvas = tk.Canvas(root, height=16, width=240, highlightthickness=0)
+strength_canvas.pack(pady=5)
+
+def update_strength_meter(entropy):
+    # Define 4 buckets and their respective colors
+    buckets = [
+        (28, "red"),
+        (36, "orange"),
+        (60, "yellow"),
+        (128, "lightgreen"),
+        (float("inf"), "green")
+    ]
+    width = 60  # 240px total divided by 4
+    for i, (limit, color) in enumerate(buckets):
+        # Fill up to the bucket reached
+        fill = "black" if entropy < limit and i > 0 else color
+        strength_canvas.create_rectangle(i*width, 0, (i+1)*width, 16, fill=fill, outline="")
+    strength_canvas.update()
+
+# In on_generate, after updating label color, add:
+update_strength_meter(entropy)
+
+
 # ---------- Callbacks ----------
 def on_generate():
     try:
