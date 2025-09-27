@@ -59,8 +59,9 @@ def main():
 
     include_numbers = input("Include numbers? (y/n): ").lower() == "y"
     include_symbols = input("Include symbols? (y/n): ").lower() == "y"
+    exclude_chars = input("Characters to exclude (leave blank for none): ")
+    password = generate_password(num_words, include_numbers, include_symbols, exclude_chars)
 
-    password = generate_password(num_words, include_numbers, include_symbols)
     print("\nGenerated Password:", password)
 
     # Show strength

@@ -11,17 +11,21 @@ WORDS = [
     "cosmos", "signal", "flare", "aurora", "nova", "spark", "horizon", "lunar"
 ]
 
-def generate_password(num_words=4, include_numbers=True, include_symbols=True):
+def generate_password(num_words=4, include_numbers=True, include_symbols=True, exclude_chars=""):
     chosen = random.sample(WORDS, num_words)
-    password = "-".join(chosen)
-
+    # Remove excluded chars from words
+    cleaned_words = ["".join(c for c in word if c not in exclude_chars) for word in chosen]
+    password = "-".join(cleaned_words)
     if include_numbers:
-        password += str(random.randint(10, 99))
-
+        valid_digits = [d for d in "0123456789" if d not in exclude_chars]
+        if valid_digits:
+            password += random.choice(valid_digits) + random.choice(valid_digits)
     if include_symbols:
-        password += random.choice("!@#$%^&*?")
-
+        valid_symbols = [s for s in "!@#$%^&*?" if s not in exclude_chars]
+        if valid_symbols:
+            password += random.choice(valid_symbols)
     return password
+
 
 # ---------- Strength calculation ----------
 def estimate_entropy(password: str) -> float:
