@@ -40,15 +40,15 @@ def estimate_entropy(password: str) -> float:
 
 def strength_label(entropy_bits: float):
     if entropy_bits < 28:
-        return "Very Weak", "red"
+        return "bro you serious?? ", "red"
     elif entropy_bits < 36:
-        return "Weak", "orange"
+        return "bro you serious?? ", "orange"
     elif entropy_bits < 60:
-        return "Reasonable", "yellow"
+        return "meh ", "yellow"
     elif entropy_bits < 128:
-        return "Strong", "lightgreen"
+        return "Uncrackable ", "lightgreen"
     else:
-        return "Very Strong", "green"
+        return "Uncrackable ", "green"
 
 # ---------- Callbacks ----------
 def on_generate():
