@@ -65,6 +65,9 @@ def on_generate():
         label, color = strength_label(entropy)
         strength_var.set(f"{label} ({entropy} bits)")
         strength_label_widget.config(fg=color)
+        # Optional: Change the output entry background color for visual cue
+        output_entry.config(bg=color)
+        strength_canvas.config(width=min(entropy*2, 400), bg=color)
 
     except ValueError:
         messagebox.showerror("Input Error", "Please enter a valid number of words.")
